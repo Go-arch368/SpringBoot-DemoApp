@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Student;
 import com.example.demo.service.StudentService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -23,12 +24,12 @@ public class StudentController {
    }
 
    @PostMapping
-    public Student addStudent(@RequestBody Student data){
+    public Student addStudent(@Valid @RequestBody Student data){
        return studentService.addStudent(data);
    }
 
    @PutMapping("/{id}")
-   public Student updateStudent(@PathVariable Long id , @RequestBody Student student){
+   public Student updateStudent(@PathVariable Long id , @Valid @RequestBody Student student){
        return studentService.updateStudent(id,student);
    }
 
