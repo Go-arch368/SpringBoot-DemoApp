@@ -1,47 +1,45 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Student;
+import com.example.demo.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
 public class StudentService {
-    private List<Student> students = new ArrayList<>(List.of(
 
-            new Student(1L, "Alice", "alice@email.com", "Java"),
-            new Student(2L, "Bob", "bob@email.com", "Python")
-    ));
+    @Autowired
+    private StudentRepository studentRepository;
 
     public List<Student> getAllStudents(){
-        return students;
+        return studentRepository.findAll();
     }
 
     public Student getStudentById(Long id){
-        return students.stream()
-                .filter(s->s.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+        return studentRepository.findById(id).orElse(null);
     }
 
     public Student addStudent(Student student){
-       students.add(student);
-       return student;
+      return studentRepository.save(student);
     }
 
     public Student updateStudent(Long id , Student updated) {
-        for (Student s : students){
-            if(s.getId().equals(id)){
-                s.setName(updated.getName());
-                s.setEmail(updated.getEmail());
-                s.setCourse(updated.getCourse());
-                return s;
-            }
+        Student existing = studentRepository.findById(id).orElse(null);
+
+        if (existing != null) {
+            existing.setName(updated.getName());
+            existing.setEmail(updated.getEmail());
+            existing.setCourse(updated.getCourse());
+            return existing;
         }
         return null;
     }
 
+
+
     public void deleteStudent(Long id){
-       students.removeIf(s->s.getId().equals(id));
+       studentRepository.deleteById(id);
     }
 
 }
